@@ -32,16 +32,185 @@
     toastTimer: 0,
     quoteIndex: 0,
     lastRandomIndex: -1,
+    lyrics: [],
+    lyricsMode: '',
+    lyricsFileName: '',
+    lyricsAssociatedTrack: '',
+    lyricsActiveIndex: -1,
+    lyricsLastScrollIndex: -1,
   };
 
+  // Original reflections inspired by the song's sad, vulnerable mood; these are not song lyrics.
   const quotes = [
-    'Có những nỗi buồn<br>chẳng biết kể cùng ai.',
-    'Đôi khi im lặng là cách<br>duy nhất để giấu tổn thương.',
-    'Đêm nay lại nhớ<br>một người không nên nhớ.',
-    'Không phải hết yêu,<br>chỉ là chẳng thể đi cùng nhau.',
-    'Có những người chỉ còn lại<br>trong một bài hát cũ.',
-    'Mong bạn dịu dàng với mình<br>như cách từng dịu dàng với họ.',
+    'Có khi người ta vẫn cười<br>dù trong lòng chẳng nhẹ nhàng gì.',
+    'Có những ngày chỉ mong ai đó hỏi<br>“Hôm nay, thật sự ổn không?”',
+    'Đáng thương nhất đôi khi là lúc<br>phải tự dỗ dành chính mình.',
+    'Một người đã rời khỏi cuộc sống,<br>nhưng vẫn ở lại trong những phút yếu lòng.',
+    'Không phải không muốn quên,<br>chỉ là lòng chưa học được cách thôi nhớ.',
+    'Sau những lần cố tỏ ra mạnh mẽ,<br>mong bạn vẫn cho phép mình được buồn.',
   ];
+
+
+  function parseLrc(text) {
+    const offsetMatch = text.match(/\[offset:([+-]?\d+)\]/i);
+    const offsetSeconds = offsetMatch ? Number(offsetMatch[1]) / 1000 : 0;
+    const lines = [];
+    for (const rawLine of text.split(/\r?\n/)) {
+      const timeTags = [...rawLine.matchAll(/\[(\d{1,2}):(\d{2})(?:[.:](\d{1,3}))?\]/g)];
+      if (!timeTags.length) continue;
+      const lyricText = rawLine.replace(/\[[^\]]*\]/g, '').trim();
+      if (!lyricText) continue;
+      for (const tag of timeTags) {
+        const fraction = tag[3] ? Number(`0.${tag[3]}`) : 0;
+        const time = Math.max(0, Number(tag[1]) * 60 + Number(tag[2]) + fraction + offsetSeconds);
+        lines.push({ time, text: lyricText });
+      }
+    }
+    return lines.sort((a, b) => a.time - b.time);
+  }
+
+  function formatLyricsTime(seconds) {
+    const value = Math.max(0, Number(seconds) || 0);
+    const mins = Math.floor(value / 60).toString().padStart(2, '0');
+    const secs = Math.floor(value % 60).toString().padStart(2, '0');
+    return `${mins}:${secs}`;
+  }
+
+  function updateLyricsMetadata() {
+    const current = currentTrack();
+    $('#lyricsTrackTitle').textContent = current ? current.title : 'Khuôn Mặt Đáng Thương';
+    const subtitle = $('#lyricsTrackSubtitle');
+    if (!state.lyrics.length) {
+      subtitle.textContent = 'Chưa có lời nhạc được nạp';
+      return;
+    }
+    if (state.lyricsAssociatedTrack && current && state.lyricsAssociatedTrack !== current.title) {
+      subtitle.textContent = `Lời đã nạp cho “${state.lyricsAssociatedTrack}” · hãy chọn lời đúng với bài đang nghe`;
+    } else if (state.lyricsMode === 'lrc') {
+      subtitle.textContent = `Đồng bộ theo thời gian · ${state.lyricsFileName}`;
+    } else {
+      subtitle.textContent = `Lời văn bản tĩnh · ${state.lyricsFileName}`;
+    }
+  }
+
+  function renderLyrics() {
+    const empty = $('#lyricsEmpty');
+    const reader = $('#lyricsReader');
+    const linesElement = $('#lyricsLines');
+    linesElement.replaceChildren();
+    state.lyricsActiveIndex = -1;
+    state.lyricsLastScrollIndex = -1;
+    empty.hidden = state.lyrics.length > 0;
+    reader.hidden = state.lyrics.length === 0;
+    $('#clearLyrics').disabled = state.lyrics.length === 0;
+    $('#lyricsCurrent').hidden = state.lyricsMode !== 'lrc' || state.lyrics.length === 0;
+    $('#lyricsModeLabel').textContent = state.lyricsMode === 'lrc'
+      ? 'LỜI NHẠC ĐỒNG BỘ · .LRC'
+      : state.lyricsMode === 'txt' ? 'LỜI NHẠC VĂN BẢN · .TXT' : 'HỖ TRỢ .LRC / .TXT';
+
+    state.lyrics.forEach((line, index) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'lyric-line';
+      button.dataset.index = String(index);
+      if (state.lyricsMode === 'lrc') {
+        const timestamp = document.createElement('span');
+        timestamp.className = 'lyric-timestamp';
+        timestamp.textContent = formatLyricsTime(line.time);
+        const content = document.createElement('span');
+        content.className = 'lyric-text';
+        content.textContent = line.text;
+        button.append(timestamp, content);
+      } else {
+        const content = document.createElement('span');
+        content.className = 'lyric-text';
+        content.textContent = line.text;
+        button.append(content);
+      }
+      button.addEventListener('click', () => {
+        if (state.lyricsMode === 'lrc' && Number.isFinite(line.time)) {
+          if (!currentTrack()) {
+            showToast('Hãy nạp và chọn bài nhạc trước khi tua theo lời.');
+            return;
+          }
+          audio.currentTime = Math.min(line.time, Number.isFinite(audio.duration) ? audio.duration : line.time);
+          updateLyricsForTime(true);
+        } else {
+          setActiveLyric(index, true);
+        }
+      });
+      linesElement.appendChild(button);
+    });
+    updateLyricsMetadata();
+    if (state.lyricsMode === 'lrc') updateLyricsForTime(true);
+  }
+
+  function setActiveLyric(index, scroll = false) {
+    if (index === state.lyricsActiveIndex && !scroll) return;
+    state.lyricsActiveIndex = index;
+    const rows = $('#lyricsLines').querySelectorAll('.lyric-line');
+    rows.forEach((row, rowIndex) => row.classList.toggle('active', rowIndex === index));
+    $('#lyricsCurrent').hidden = state.lyricsMode !== 'lrc' || index < 0;
+    if (index >= 0 && state.lyrics[index]) {
+      $('#lyricsCurrentText').textContent = state.lyrics[index].text;
+      if (scroll && rows[index]) rows[index].scrollIntoView({ block: 'nearest', behavior: reducedMotion ? 'auto' : 'smooth' });
+    }
+  }
+
+  function updateLyricsForTime(forceScroll = false) {
+    if (state.lyricsMode !== 'lrc' || !state.lyrics.length) return;
+    const now = Number(audio.currentTime) || 0;
+    let active = -1;
+    for (let i = 0; i < state.lyrics.length; i += 1) {
+      if (state.lyrics[i].time <= now + 0.02) active = i;
+      else break;
+    }
+    const changed = active !== state.lyricsActiveIndex;
+    setActiveLyric(active, forceScroll || (changed && active !== state.lyricsLastScrollIndex));
+    if (active >= 0 && changed) state.lyricsLastScrollIndex = active;
+  }
+
+  async function loadLyricsFile(file) {
+    if (!file) return;
+    try {
+      const contents = await file.text();
+      const isLrc = /\.lrc$/i.test(file.name);
+      let lines;
+      if (isLrc) {
+        lines = parseLrc(contents);
+        if (!lines.length) {
+          showToast('Không thấy mốc thời gian hợp lệ trong file LRC. Hãy kiểm tra định dạng [mm:ss.xx].');
+          return;
+        }
+        state.lyricsMode = 'lrc';
+      } else {
+        lines = contents.split(/\r?\n/).map((line) => line.trim()).filter(Boolean).map((text) => ({ time: null, text }));
+        if (!lines.length) {
+          showToast('File lời nhạc đang trống.');
+          return;
+        }
+        state.lyricsMode = 'txt';
+      }
+      state.lyrics = lines;
+      state.lyricsFileName = file.name;
+      state.lyricsAssociatedTrack = currentTrack()?.title || '';
+      renderLyrics();
+      showToast(isLrc ? 'Đã nạp lời nhạc có thể đồng bộ theo thời gian.' : 'Đã nạp lời nhạc dạng văn bản. Dùng file LRC để đồng bộ theo nhạc.');
+    } catch (_) {
+      showToast('Không đọc được file lời nhạc này. Hãy thử file .LRC hoặc .TXT khác.');
+    }
+  }
+
+  function clearLyrics() {
+    state.lyrics = [];
+    state.lyricsMode = '';
+    state.lyricsFileName = '';
+    state.lyricsAssociatedTrack = '';
+    state.lyricsActiveIndex = -1;
+    state.lyricsLastScrollIndex = -1;
+    renderLyrics();
+    showToast('Đã xóa lời nhạc khỏi trình đọc.');
+  }
 
   function formatTime(seconds) {
     if (!Number.isFinite(seconds) || seconds < 0) return '0:00';
@@ -131,6 +300,7 @@
     $('#featuredArtist').textContent = track ? `${track.artist} · File trên thiết bị` : 'Sơn Tùng M-TP · Chưa nạp file nhạc';
     $('#mainCover').setAttribute('aria-label', track ? `Ảnh bìa mặc định cho ${track.title}` : 'Ảnh bìa nghệ thuật tông màu tối');
     $('#durationTime').textContent = track && Number.isFinite(audio.duration) ? formatTime(audio.duration) : '0:00';
+    updateLyricsMetadata();
   }
 
   function updateTrackList() {
@@ -484,6 +654,14 @@
   $('#focusBtn').addEventListener('click', toggleFocusMode);
   $('#closeFocus').addEventListener('click', toggleFocusMode);
   fileInput.addEventListener('change', (event) => addFiles(event.target.files));
+  const lyricsFileInput = $('#lyricsFileInput');
+  $('#loadLyrics').addEventListener('click', () => lyricsFileInput.click());
+  $('#lyricsEmptyLoad').addEventListener('click', () => lyricsFileInput.click());
+  $('#clearLyrics').addEventListener('click', clearLyrics);
+  lyricsFileInput.addEventListener('change', (event) => {
+    loadLyricsFile(event.target.files?.[0]);
+    lyricsFileInput.value = '';
+  });
 
   $('#volumeBar').value = storageGet('vutungios-volume', '0.75');
   audio.volume = Number($('#volumeBar').value);
@@ -507,12 +685,14 @@
   audio.addEventListener('loadedmetadata', () => {
     $('#durationTime').textContent = formatTime(audio.duration);
     updateTrackMetadata();
+    updateLyricsForTime(true);
   });
   audio.addEventListener('timeupdate', () => {
     if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
     $('#currentTime').textContent = formatTime(audio.currentTime);
     $('#seekBar').value = String(Math.round((audio.currentTime / audio.duration) * 1000));
     updateProgressFill($('#seekBar'));
+    updateLyricsForTime();
   });
   audio.addEventListener('play', () => {
     setPlayingUI(true);
