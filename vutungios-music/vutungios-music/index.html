@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0a0c">
+  <meta name="description" content="VUTUNGIOS — một góc nhỏ dành cho những đêm nhiều tâm sự.">
+  <title>VUTUNGIOS — nghe những điều không thể nói</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="ambient ambient-one" aria-hidden="true"></div>
+  <div class="ambient ambient-two" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="rain-layer" id="rainLayer" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="brand" href="#home" aria-label="VUTUNGIOS — về đầu trang">
+      <span class="brand-mark">V<span>.</span></span>
+      <span class="brand-name">VUTUNGIOS<span class="brand-period">.</span></span>
+    </a>
+    <nav class="top-nav" aria-label="Điều hướng chính">
+      <a href="#player">Nghe nhạc</a>
+      <a href="#diary">Tâm sự</a>
+      <a href="#about">Về nơi này</a>
+    </nav>
+    <div class="topbar-right">
+      <span class="live-dot" aria-hidden="true"></span>
+      <span class="status-label" id="siteStatus">A QUIET PLACE</span>
+      <button class="icon-button effects-button" id="effectsToggle" title="Bật hoặc tắt hiệu ứng nền" aria-label="Bật hoặc tắt hiệu ứng nền" aria-pressed="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.64 5.64l1.42 1.42m9.88 9.88 1.42 1.42m0-12.72-1.42 1.42m-9.88 9.88-1.42 1.42"/><circle cx="12" cy="12" r="4"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero section-shell" id="home">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="eyebrow-line"></span><span>ÂM NHẠC CHO NHỮNG NGÀY KHÔNG VUI</span></div>
+        <h1>Có những đêm,<br>chỉ muốn <em>im lặng.</em></h1>
+        <p class="hero-intro">Không cần phải ổn ngay hôm nay. Cứ để một bài hát nói thay những điều bạn vẫn giữ trong lòng.</p>
+        <div class="hero-actions">
+          <button class="button button-primary" id="startListening">
+            <span class="button-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m9 6 10 6-10 6z"/></svg></span>
+            <span>Ở lại với âm nhạc</span>
+          </button>
+          <button class="button button-quiet" id="uploadHero"><span class="plus-mark">＋</span> Thêm nhạc của bạn</button>
+        </div>
+        <div class="hero-note"><span class="note-line"></span><span>NHỮNG ĐIỀU KHÔNG THỂ NÓI THÀNH LỜI</span></div>
+      </div>
+
+      <div class="hero-art" aria-label="Khung cửa sổ trong đêm mưa, phía xa là ánh đèn cô độc" role="img">
+        <div class="art-sky"></div>
+        <div class="art-moon"></div>
+        <div class="art-city city-back"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="art-city city-front"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="window-frame"><span class="window-cross horizontal"></span><span class="window-cross vertical"></span></div>
+        <div class="window-reflection"></div>
+        <div class="silhouette"><div class="silhouette-head"></div><div class="silhouette-neck"></div><div class="silhouette-body"></div></div>
+        <div class="rain-streaks" id="artRain" aria-hidden="true"></div>
+        <div class="art-caption"><span>01 / 04</span><span>SAU Ô CỬA SỔ</span></div>
+        <div class="art-quote">“Có những nỗi buồn<br>đẹp nhất khi không ai thấy.”</div>
+        <div class="art-small-label">A NIGHT TO REMEMBER</div>
+      </div>
+      <div class="hero-scroll" aria-hidden="true"><span>CUỘN XUỐNG</span><i></i></div>
+      <div class="hero-index" aria-hidden="true">01 — 04</div>
+    </section>
+
+    <div class="ticker" aria-label="Thông điệp VUTUNGIOS">
+      <div class="ticker-track">
+        <span>VUTUNGIOS</span><b>✳</b><span>NGHE NHỮNG ĐIỀU KHÔNG THỂ NÓI</span><b>✳</b><span>VUTUNGIOS</span><b>✳</b><span>NHỮNG ĐÊM KHÔNG NGỦ</span><b>✳</b>
+        <span>VUTUNGIOS</span><b>✳</b><span>NGHE NHỮNG ĐIỀU KHÔNG THỂ NÓI</span><b>✳</b><span>VUTUNGIOS</span><b>✳</b><span>NHỮNG ĐÊM KHÔNG NGỦ</span><b>✳</b>
+      </div>
+    </div>
+
+    <section class="music-section section-shell" id="player">
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow"><span class="eyebrow-line"></span><span>NHẤN PLAY, THỞ CHẬM LẠI</span></div>
+          <h2>Một bài hát.<br><em>Một khoảng lặng.</em></h2>
+        </div>
+        <p class="section-aside">Không gian này thuộc về bạn.<br>Hãy mang theo những giai điệu của riêng mình.</p>
+      </div>
+
+      <div class="player-layout">
+        <div class="featured-track glass-panel">
+          <div class="feature-label"><span class="tiny-dot"></span> BÀI HÁT CỦA ĐÊM NAY</div>
+          <div class="cover-art" id="mainCover" aria-label="Ảnh bìa nghệ thuật tông màu tối">
+            <div class="cover-haze haze-a"></div><div class="cover-haze haze-b"></div>
+            <div class="cover-window"><span></span><span></span></div>
+            <div class="cover-person"><i></i><b></b></div>
+            <div class="cover-grain"></div>
+            <div class="cover-wordmark">VUTUNGIOS<span>.</span></div>
+            <div class="cover-bottom"><span>VOL. 01</span><span>AFTER DARK</span></div>
+          </div>
+          <div class="feature-info">
+            <div><p class="micro-label">GỢI Ý CHO TÂM TRẠNG</p><h3 id="featuredTitle">Khuôn Mặt Đáng Thương</h3><p class="muted-text" id="featuredArtist">Sơn Tùng M-TP · Chưa nạp file nhạc</p></div>
+            <button class="round-play" id="featuredPlay" aria-label="Phát bài hát đang chọn" title="Phát nhạc"><svg viewBox="0 0 24 24"><path d="m9 6 10 6-10 6z"/></svg></button>
+          </div>
+          <div class="feature-foot"><span><span class="small-wave">〰</span> MUSIC FOR LATE NIGHTS</span><span>01 / YOUR PLAYLIST</span></div>
+        </div>
+
+        <div class="playlist-panel">
+          <div class="playlist-heading"><div><p class="micro-label">YOUR PRIVATE PLAYLIST</p><h3>Nhạc trong đêm</h3></div><button class="text-button" id="addTracks"><span>＋</span> THÊM NHẠC</button></div>
+          <div class="playlist-empty" id="playlistEmpty">
+            <div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13M9 10l12-2"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+            <p class="empty-title">Một giai điệu đang chờ.</p>
+            <p class="empty-copy">Thêm file MP3, M4A, WAV hoặc OGG từ thiết bị để bắt đầu nghe.</p>
+            <button class="button button-outline" id="emptyAdd">Chọn file nhạc <span>↗</span></button>
+          </div>
+          <div class="track-list" id="trackList" aria-label="Danh sách phát" hidden></div>
+          <div class="playlist-bottom"><span id="trackCount">CHƯA CÓ BÀI HÁT</span><span>MP3 · M4A · WAV · OGG</span></div>
+        </div>
+      </div>
+
+      <div class="player-console glass-panel" aria-label="Bộ điều khiển nhạc">
+        <div class="console-track">
+          <div class="mini-cover"><span>V.</span></div>
+          <div class="console-song"><strong id="nowPlayingTitle">Chưa có bài hát</strong><span id="nowPlayingArtist">Nạp một file để bắt đầu</span></div>
+          <span class="playing-indicator" id="playingIndicator" aria-label="Trạng thái phát nhạc"><i></i><i></i><i></i><i></i></span>
+        </div>
+        <div class="console-center">
+          <div class="console-buttons">
+            <button class="control-button subtle" id="shuffleBtn" aria-label="Phát ngẫu nhiên" title="Phát ngẫu nhiên" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="m16 3 4 4-4 4M4 17l5-5m3-3 4-4M16 17l4 4-4 0M4 7h2.5a4 4 0 0 1 3 1.4M12.5 15.6a4 4 0 0 0 3 1.4H20"/></svg></button>
+            <button class="control-button" id="prevBtn" aria-label="Bài trước" title="Bài trước"><svg viewBox="0 0 24 24"><path d="M6 5v14M19 6l-10 6 10 6z"/></svg></button>
+            <button class="control-play" id="playBtn" aria-label="Phát nhạc" title="Phát nhạc"><svg class="play-icon" viewBox="0 0 24 24"><path d="m8 5 12 7-12 7z"/></svg><svg class="pause-icon" viewBox="0 0 24 24"><path d="M7 5h4v14H7zM15 5h4v14h-4z"/></svg></button>
+            <button class="control-button" id="nextBtn" aria-label="Bài tiếp theo" title="Bài tiếp theo"><svg viewBox="0 0 24 24"><path d="M18 5v14M5 6l10 6-10 6z"/></svg></button>
+            <button class="control-button subtle" id="repeatBtn" aria-label="Lặp lại" title="Lặp lại" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="m17 2 4 4-4 4M3 11V9a3 3 0 0 1 3-3h15M7 22l-4-4 4-4m14-1v2a3 3 0 0 1-3 3H3"/></svg><span class="repeat-one" id="repeatOne">1</span></button>
+          </div>
+          <div class="timeline"><span id="currentTime">0:00</span><input id="seekBar" type="range" min="0" max="1000" value="0" step="1" aria-label="Vị trí bài hát" disabled><span id="durationTime">0:00</span></div>
+        </div>
+        <div class="console-tools">
+          <button class="control-button" id="visualizerToggle" aria-label="Bật hoặc tắt sóng nhạc" title="Sóng nhạc" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M4 10v4M8 6v12M12 3v18M16 7v10M20 10v4"/></svg></button>
+          <div class="volume-control"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h4l5 4V6l-5 4H4zM17 9a5 5 0 0 1 0 6M19 6a9 9 0 0 1 0 12"/></svg><input id="volumeBar" type="range" min="0" max="1" value="0.75" step="0.01" aria-label="Âm lượng"></div>
+          <button class="control-button" id="focusBtn" aria-label="Chế độ tập trung" title="Chế độ tập trung"><svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m13-5h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3m13-5v3a2 2 0 0 1-2 2h-3"/></svg></button>
+        </div>
+        <audio id="audio" preload="metadata"></audio>
+      </div>
+      <p class="player-hint"><span>✳</span> Nhạc được phát trực tiếp từ file bạn chọn — không tải lên máy chủ.</p>
+    </section>
+
+    <section class="diary-section section-shell" id="diary">
+      <div class="diary-topline"><span class="micro-label">A FEW WORDS FOR TONIGHT</span><span class="diary-number">02 — 04</span></div>
+      <div class="diary-content">
+        <div class="diary-side-note">NHẬT KÝ<br>KHÔNG GỬI</div>
+        <div class="quote-stage" aria-live="polite" aria-atomic="true">
+          <div class="quote-mark">“</div>
+          <p class="rotating-quote" id="rotatingQuote">Có những nỗi buồn<br>chẳng biết kể cùng ai.</p>
+          <div class="quote-meta"><span class="quote-dash"></span><span>MỘT DÒNG CHO ĐÊM NAY</span></div>
+        </div>
+        <div class="diary-counter"><span id="quoteCounter">01</span><span class="counter-divider"></span><span>06</span></div>
+      </div>
+      <div class="diary-footer"><span>YOU DON'T HAVE TO BE OKAY ALL THE TIME.</span><span>HÃY ĐỂ MÌNH ĐƯỢC BUỒN MỘT CHÚT.</span></div>
+    </section>
+
+    <section class="closing-section section-shell" id="about">
+      <div class="closing-visual" aria-hidden="true"><div class="closing-orb"></div><div class="closing-horizon"></div><div class="closing-silhouette"></div><span class="closing-star star-a">✳</span><span class="closing-star star-b">·</span><span class="closing-star star-c">✦</span></div>
+      <div class="closing-copy"><div class="eyebrow"><span class="eyebrow-line"></span><span>TRƯỚC KHI ĐÊM KẾT THÚC</span></div><h2>Ngày mai,<br>mọi thứ sẽ <em>khác.</em></h2><p>Còn bây giờ, cứ ngồi đây một chút. Bật một bài hát. Nhìn mưa rơi. Không cần phải giải thích điều gì với ai cả.</p><button class="button button-primary" id="backToMusic"><span class="button-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m9 6 10 6-10 6z"/></svg></span> Quay lại với âm nhạc</button></div>
+    </section>
+  </main>
+
+  <footer class="footer section-shell"><a class="brand footer-brand" href="#home"><span class="brand-mark">V<span>.</span></span><span class="brand-name">VUTUNGIOS<span class="brand-period">.</span></span></a><p>Made for the nights you can't explain.</p><a class="back-top" href="#home">TRỞ VỀ ĐẦU TRANG ↑</a></footer>
+
+  <input id="fileInput" type="file" accept="audio/*,.mp3,.m4a,.wav,.ogg,.aac,.flac" multiple hidden>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="focus-overlay" id="focusOverlay" hidden>
+    <button class="focus-close" id="closeFocus" aria-label="Thoát chế độ tập trung">×</button>
+    <p class="micro-label">VUTUNGIOS · AFTER DARK</p>
+    <div class="focus-art"><div class="focus-moon"></div><div class="focus-horizon"></div><div class="focus-person"></div></div>
+    <p class="focus-track-title" id="focusTitle">Chưa có bài hát</p><p class="focus-track-artist" id="focusArtist">Nạp nhạc của bạn để bắt đầu</p>
+    <button class="control-play focus-play" id="focusPlay" aria-label="Phát nhạc"><svg class="play-icon" viewBox="0 0 24 24"><path d="m8 5 12 7-12 7z"/></svg><svg class="pause-icon" viewBox="0 0 24 24"><path d="M7 5h4v14H7zM15 5h4v14h-4z"/></svg></button>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
