@@ -25,6 +25,7 @@
     </a>
     <nav class="top-nav" aria-label="Điều hướng chính">
       <a href="#player">Nghe nhạc</a>
+      <a href="#lyrics">Lời nhạc</a>
       <a href="#diary">Tâm sự</a>
       <a href="#about">Về nơi này</a>
     </nav>
@@ -42,7 +43,7 @@
       <div class="hero-copy">
         <div class="eyebrow"><span class="eyebrow-line"></span><span>ÂM NHẠC CHO NHỮNG NGÀY KHÔNG VUI</span></div>
         <h1>Có những đêm,<br>chỉ muốn <em>im lặng.</em></h1>
-        <p class="hero-intro">Không cần phải ổn ngay hôm nay. Cứ để một bài hát nói thay những điều bạn vẫn giữ trong lòng.</p>
+        <p class="hero-intro">Có những lúc vẫn phải tỏ ra ổn, dù trong lòng chỉ mong có ai đó hiểu mình. Cứ để âm nhạc ở cạnh bạn một lúc.</p>
         <div class="hero-actions">
           <button class="button button-primary" id="startListening">
             <span class="button-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m9 6 10 6-10 6z"/></svg></span>
@@ -50,7 +51,7 @@
           </button>
           <button class="button button-quiet" id="uploadHero"><span class="plus-mark">＋</span> Thêm nhạc của bạn</button>
         </div>
-        <div class="hero-note"><span class="note-line"></span><span>NHỮNG ĐIỀU KHÔNG THỂ NÓI THÀNH LỜI</span></div>
+        <div class="hero-note"><span class="note-line"></span><span>CÓ NHỮNG NỖI BUỒN ĐƯỢC GIẤU SAU NỤ CƯỜI</span></div>
       </div>
 
       <div class="hero-art" aria-label="Khung cửa sổ trong đêm mưa, phía xa là ánh đèn cô độc" role="img">
@@ -63,7 +64,7 @@
         <div class="silhouette"><div class="silhouette-head"></div><div class="silhouette-neck"></div><div class="silhouette-body"></div></div>
         <div class="rain-streaks" id="artRain" aria-hidden="true"></div>
         <div class="art-caption"><span>01 / 04</span><span>SAU Ô CỬA SỔ</span></div>
-        <div class="art-quote">“Có những nỗi buồn<br>đẹp nhất khi không ai thấy.”</div>
+        <div class="art-quote">“Có những nụ cười<br>chỉ để giấu một ngày dài.”</div>
         <div class="art-small-label">A NIGHT TO REMEMBER</div>
       </div>
       <div class="hero-scroll" aria-hidden="true"><span>CUỘN XUỐNG</span><i></i></div>
@@ -83,7 +84,7 @@
           <div class="eyebrow"><span class="eyebrow-line"></span><span>NHẤN PLAY, THỞ CHẬM LẠI</span></div>
           <h2>Một bài hát.<br><em>Một khoảng lặng.</em></h2>
         </div>
-        <p class="section-aside">Không gian này thuộc về bạn.<br>Hãy mang theo những giai điệu của riêng mình.</p>
+        <p class="section-aside">Dành cho những điều muốn nói mà lại thôi.<br>Và những cảm xúc chưa biết đặt tên.</p>
       </div>
 
       <div class="player-layout">
@@ -140,7 +141,45 @@
         </div>
         <audio id="audio" preload="metadata"></audio>
       </div>
-      <p class="player-hint"><span>✳</span> Nhạc được phát trực tiếp từ file bạn chọn — không tải lên máy chủ.</p>
+      <p class="player-hint"><span>✳</span> Nhạc được phát trực tiếp từ file bạn chọn — không tải lên máy chủ. <a class="player-lyrics-link" href="#lyrics">Đọc lời nhạc ↓</a></p>
+    </section>
+
+    <section class="lyrics-section section-shell" id="lyrics">
+      <div class="section-heading lyrics-heading">
+        <div>
+          <div class="eyebrow"><span class="eyebrow-line"></span><span>ĐỌC CÙNG GIAI ĐIỆU</span></div>
+          <h2>Lời nhạc.<br><em>Điều chưa nói.</em></h2>
+        </div>
+        <p class="section-aside">Nạp file lời nhạc của bạn để đọc trong lúc nghe.<br>File .LRC có thể chạy theo từng mốc thời gian.</p>
+      </div>
+      <div class="lyrics-panel glass-panel">
+        <div class="lyrics-panel-head">
+          <div class="lyrics-track-meta">
+            <p class="micro-label">NOW READING</p>
+            <h3 id="lyricsTrackTitle">Khuôn Mặt Đáng Thương</h3>
+            <p id="lyricsTrackSubtitle">Chưa có lời nhạc được nạp</p>
+          </div>
+          <div class="lyrics-actions">
+            <button class="button button-outline lyrics-load" id="loadLyrics"><span>＋</span> NẠP LỜI NHẠC</button>
+            <button class="text-button" id="clearLyrics" type="button" disabled>XÓA LỜI</button>
+          </div>
+        </div>
+        <div class="lyrics-empty" id="lyricsEmpty">
+          <div class="lyrics-empty-mark">♪</div>
+          <p class="empty-title">Lời bài hát sẽ ở đây.</p>
+          <p class="empty-copy">Chọn file .LRC để đồng bộ lời theo nhạc, hoặc file .TXT để đọc lời tĩnh. File chỉ được đọc trong trình duyệt của bạn.</p>
+          <button class="button button-quiet" id="lyricsEmptyLoad" type="button">Chọn file lời nhạc <span>↗</span></button>
+        </div>
+        <div class="lyrics-reader" id="lyricsReader" hidden>
+          <div class="lyrics-current" id="lyricsCurrent" hidden>
+            <span class="micro-label">ĐANG HÁT</span>
+            <p id="lyricsCurrentText">♪</p>
+          </div>
+          <div class="lyrics-lines" id="lyricsLines" aria-live="polite"></div>
+        </div>
+        <div class="lyrics-panel-foot"><span id="lyricsModeLabel">HỖ TRỢ .LRC / .TXT</span><span>VUTUNGIOS · AFTER DARK</span></div>
+      </div>
+      <input id="lyricsFileInput" type="file" accept=".lrc,.txt,text/plain" hidden>
     </section>
 
     <section class="diary-section section-shell" id="diary">
@@ -149,7 +188,7 @@
         <div class="diary-side-note">NHẬT KÝ<br>KHÔNG GỬI</div>
         <div class="quote-stage" aria-live="polite" aria-atomic="true">
           <div class="quote-mark">“</div>
-          <p class="rotating-quote" id="rotatingQuote">Có những nỗi buồn<br>chẳng biết kể cùng ai.</p>
+          <p class="rotating-quote" id="rotatingQuote">Có khi người ta vẫn cười<br>dù lòng chẳng nhẹ nhàng gì.</p>
           <div class="quote-meta"><span class="quote-dash"></span><span>MỘT DÒNG CHO ĐÊM NAY</span></div>
         </div>
         <div class="diary-counter"><span id="quoteCounter">01</span><span class="counter-divider"></span><span>06</span></div>
@@ -159,7 +198,7 @@
 
     <section class="closing-section section-shell" id="about">
       <div class="closing-visual" aria-hidden="true"><div class="closing-orb"></div><div class="closing-horizon"></div><div class="closing-silhouette"></div><span class="closing-star star-a">✳</span><span class="closing-star star-b">·</span><span class="closing-star star-c">✦</span></div>
-      <div class="closing-copy"><div class="eyebrow"><span class="eyebrow-line"></span><span>TRƯỚC KHI ĐÊM KẾT THÚC</span></div><h2>Ngày mai,<br>mọi thứ sẽ <em>khác.</em></h2><p>Còn bây giờ, cứ ngồi đây một chút. Bật một bài hát. Nhìn mưa rơi. Không cần phải giải thích điều gì với ai cả.</p><button class="button button-primary" id="backToMusic"><span class="button-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m9 6 10 6-10 6z"/></svg></span> Quay lại với âm nhạc</button></div>
+      <div class="closing-copy"><div class="eyebrow"><span class="eyebrow-line"></span><span>TRƯỚC KHI ĐÊM KẾT THÚC</span></div><h2>Ngày mai,<br>mọi thứ sẽ <em>khác.</em></h2><p>Còn bây giờ, cứ ngồi đây một chút. Có những ngày mình chẳng cần lời khuyên, chỉ cần một giai điệu hiểu được tâm trạng của mình.</p><button class="button button-primary" id="backToMusic"><span class="button-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m9 6 10 6-10 6z"/></svg></span> Quay lại với âm nhạc</button></div>
     </section>
   </main>
 
